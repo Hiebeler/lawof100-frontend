@@ -21,21 +21,21 @@ class _MainState extends State<Main> {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/profile': (context) => const Profile(),
-        '/timeline': (context) => const Timeline(),
       },
       theme: ThemeData(
         // Define the default brightness and colors.
-        brightness: Brightness.light,
-        primaryColor: Colors.orange[800],
+        brightness: Brightness.dark,
+        primaryColor: Color.fromRGBO(8, 181, 102, 1.0),
+        backgroundColor: Color.fromRGBO(42, 46, 55, 1.0),
+
 
         // Define the default font family.
-        fontFamily: 'Georgia',
+        fontFamily: 'Arial',
 
         // Define the default TextTheme. Use this to specify the default
         // text styling for headlines, titles, bodies of text, and more.
         textTheme: const TextTheme(
-          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          headline1: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
           headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
         ),

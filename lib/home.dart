@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawof100/feed.dart';
 import 'package:lawof100/profile.dart';
 import 'package:lawof100/publicChallenges.dart';
 import 'package:lawof100/timeline.dart';
@@ -13,28 +14,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   int navigationBarIndex = 0;
-  Widget test = Profile();
-
-  void navigateToScreens(siteIndex) {
-    switch(siteIndex) {
-      case 0:
-        test = Profile();
-        break;
-      case 1:
-        test = Timeline();
-        break;
-      case 2:
-        test = PublicChallenges();
-        break;
-      case 3:
-        test = Profile();
-    }
-  }
+  var sites = [Feed(), Timeline(), PublicChallenges(), Profile()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: test,
+      body: sites[navigationBarIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: navigationBarIndex,
@@ -43,7 +28,6 @@ class _HomeState extends State<Home> {
             navigationBarIndex = index;
           }
           );
-          navigateToScreens(index);
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
