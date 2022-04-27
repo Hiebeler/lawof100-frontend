@@ -12,6 +12,7 @@ class Grid extends StatelessWidget {
           color: Color.fromRGBO(59, 66, 79, 1.0),
           borderRadius: BorderRadius.all(Radius.circular(6.0))),
       child: GridView(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: EdgeInsets.all(10),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
