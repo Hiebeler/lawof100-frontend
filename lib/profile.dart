@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lawof100/components/publicChallengeComponent.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -58,14 +59,37 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             ),
           ),
           TabBar(
+            indicatorColor: Theme.of(context).primaryColor,
+            labelColor: Colors.white,
             tabs: const [Tab(text: "Attended"), Tab(text: 'Created')],
             controller: _tabController,
           ),
           Expanded(
             child: TabBarView(
-              children: const [
-                Center(child: Text('Tab 1')),
-                Center(child: Text('Tab 2')),
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: const [
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: const [
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                      PublicChallengesComponent(),
+                    ],
+                  ),
+                ),
               ],
               controller: _tabController,
             ),
