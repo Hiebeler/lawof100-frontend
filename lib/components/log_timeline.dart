@@ -24,12 +24,12 @@ class LogTimeline extends StatelessWidget {
                   Row(
                     children: [
                       Text("@hiebeler05", style: Theme.of(context).textTheme.bodyText2,),
-                      Text(" | "),
-                      Text("Day 1")
+                      const Text(" | "),
+                      const Text("Day 1")
                     ],
                   ),
-                  SizedBox(height: 5,),
-                  Text("challenge 1")
+                  const SizedBox(height: 5,),
+                  const Text("challenge 1")
                 ],
               )
             ],

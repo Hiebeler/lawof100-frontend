@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddChallenge extends StatefulWidget {
-  AddChallenge({Key? key}) : super(key: key);
+  const AddChallenge({Key? key}) : super(key: key);
 
   @override
   State<AddChallenge> createState() => _AddChallengeState();
@@ -10,6 +14,22 @@ class AddChallenge extends StatefulWidget {
 class _AddChallengeState extends State<AddChallenge> {
   bool isPublic = true;
   DateTime selectedDate = DateTime.now();
+  File? image;
+
+  void getImage() async {
+    try {
+      final image = await ImagePicker().pickImage(
+          source: ImageSource.gallery, maxHeight: 1000, maxWidth: 1000);
+      if (image == null) return;
+
+      final File? imageTemporary = File(image.path);
+      setState(() {
+        this.image = imageTemporary;
+      });
+    } on PlatformException catch (e) {
+      print("failed to pick image $e");
+    }
+  }
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -42,20 +62,32 @@ class _AddChallengeState extends State<AddChallenge> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 10),
+        padding:
+            const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            GestureDetector(
+              child: CircleAvatar(
+                backgroundColor: Color.fromRGBO(20, 40, 30, 1),
+                radius: 40,
+                backgroundImage: image != null ? FileImage(image!) : null,
+              ),
+              onTap: getImage,
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
                     borderSide:
                         BorderSide(color: Theme.of(context).primaryColor)),
                 hintText: "Challenge Name",
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -75,7 +107,7 @@ class _AddChallengeState extends State<AddChallenge> {
                 const SizedBox(
                   width: 15,
                 ),
-                Text("Public"),
+                const Text("Public"),
               ],
             ),
             const SizedBox(
@@ -83,12 +115,24 @@ class _AddChallengeState extends State<AddChallenge> {
             ),
             ElevatedButton(
               onPressed: () => _selectDate(context),
-              child: Text("pick date"),
+              child: const Text("pick date"),
               style: ButtonStyle(
                 backgroundColor:
                     MaterialStateProperty.all(Theme.of(context).primaryColor),
               ),
             ),
+            Expanded(
+                child: Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Save"),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Theme.of(context).primaryColor),
+                ),
+              ),
+            ))
           ],
         ),
       ),

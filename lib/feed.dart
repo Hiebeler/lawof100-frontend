@@ -21,7 +21,7 @@ class _FeedState extends State<Feed> {
             children: [
               Align(
                 alignment: Alignment.topRight,
-                child: ElevatedButton(onPressed: () => {Navigator.pushNamed(context, "/addChallenge")}, child: Text("add Challenge"), style: ButtonStyle(
+                child: ElevatedButton(onPressed: () => {Navigator.pushNamed(context, "/addChallenge")}, child: const Text("add Challenge"), style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
                 ),),
               ),

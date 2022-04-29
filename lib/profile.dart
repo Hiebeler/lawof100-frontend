@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: [
           const Center(
@@ -42,7 +42,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20),
               child: Text(
                 'Daniel Hiebeler',
                 style: Theme.of(context).textTheme.headline1,
@@ -51,7 +51,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 30),
+              padding: const EdgeInsets.only(bottom: 30),
               child: Text(
                 '@daniebeler',
                 style: Theme.of(context).textTheme.headline1,

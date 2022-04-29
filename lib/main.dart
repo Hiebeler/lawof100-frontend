@@ -27,7 +27,7 @@ class _MainState extends State<Main> {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/addChallenge': (context) => AddChallenge(),
+        '/addChallenge': (context) => const AddChallenge(),
       },
       theme: ThemeData(
         // Define the default brightness and colors.

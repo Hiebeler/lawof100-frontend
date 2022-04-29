@@ -4,7 +4,7 @@ class Log extends StatelessWidget {
   var text = "";
   var day = "";
   var done = false;
-  Log({required this.text, required this.day, required this.done});
+  Log({Key? key, required this.text, required this.day, required this.done}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
