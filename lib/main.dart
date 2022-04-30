@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lawof100/add_challenge.dart';
 import 'package:lawof100/home.dart';
+import 'package:lawof100/sign_in.dart';
+import 'package:lawof100/sign_up.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,10 +26,12 @@ class _MainState extends State<Main> {
     final ThemeData theme = ThemeData();
 
     return MaterialApp(
-      initialRoute: '/',
+      initialRoute: '/signIn',
       routes: {
         '/': (context) => const Home(),
         '/addChallenge': (context) => const AddChallenge(),
+        '/signUp': (context) => SignUp(),
+        '/signIn': (context) => SignIn(),
       },
       theme: ThemeData(
         // Define the default brightness and colors.
