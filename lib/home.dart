@@ -12,22 +12,35 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   int navigationBarIndex = 0;
-  var sites = [Feed(), Timeline(), PublicChallenges(), Profile()];
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: sites[navigationBarIndex],
+      body: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() => navigationBarIndex = index);
+        },
+        children: const [
+          Feed(),
+          Timeline(),
+          PublicChallenges(),
+          Profile(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: navigationBarIndex,
         onTap: (int index) {
           setState(() {
             navigationBarIndex = index;
-          }
-          );
+            _pageController.animateToPage(index,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeOut);
+          });
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
