@@ -27,7 +27,7 @@ class _MainState extends State<Main> {
     return MaterialApp(
       initialRoute: '/signUp',
       routes: {
-        '/': (context) => const Home(),
+        '/home': (context) => const Home(),
         '/addChallenge': (context) => const AddChallenge(),
         '/signUp': (context) => SignUp(),
         '/signIn': (context) => SignIn(),

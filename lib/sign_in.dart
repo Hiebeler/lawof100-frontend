@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class SignIn extends StatefulWidget {
   SignIn({Key? key}) : super(key: key);
@@ -15,7 +19,33 @@ class _SignInState extends State<SignIn> {
   TextStyle hintTextStyle =
       const TextStyle(color: Color.fromRGBO(117, 117, 117, 1.0), fontSize: 15);
 
+  final _storage = const FlutterSecureStorage();
+
   bool _isHidden = true;
+  String email = "";
+  String password = "";
+
+  Future<bool> login() async {
+    var response = await http.post(
+        Uri.parse("http://192.168.1.20:3000/registration/login"),
+        body: {
+          "email": email,
+          "password": password,
+        },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        });
+
+    String source = utf8.decode(response.bodyBytes);
+    var responseData = json.decode(source);
+    if (responseData["token"] != null) {
+      print(responseData["token"]);
+      await _storage.write(key: 'jwt', value: responseData["token"]);
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +63,9 @@ class _SignInState extends State<SignIn> {
                 height: 40,
               ),
               TextField(
+                onChanged: (text) {
+                  email = text;
+                },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
                   filled: true,
@@ -51,6 +84,9 @@ class _SignInState extends State<SignIn> {
                 height: 30,
               ),
               TextField(
+                onChanged: (text) {
+                  password = text;
+                },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
                   filled: true,
@@ -83,14 +119,29 @@ class _SignInState extends State<SignIn> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Register"),
+                  onPressed: () => login().then((value) {
+                    if (value) {
+                      Navigator.pushNamed(context, "/home");
+                    }
+                  }),
+                  child: const Text("Sign in"),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).primaryColor),
                   ),
                 ),
-              )
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, "/signUp"),
+                  child: const Text("register"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).backgroundColor),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

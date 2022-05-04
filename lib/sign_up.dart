@@ -184,7 +184,18 @@ class _SignUpState extends State<SignUp> {
                         Theme.of(context).primaryColor),
                   ),
                 ),
-              )
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, "/signIn"),
+                  child: const Text("login"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).backgroundColor),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
