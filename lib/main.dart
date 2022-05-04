@@ -4,6 +4,7 @@ import 'package:lawof100/add_challenge.dart';
 import 'package:lawof100/home.dart';
 import 'package:lawof100/sign_in.dart';
 import 'package:lawof100/sign_up.dart';
+import 'package:lawof100/verify.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,15 +24,14 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = ThemeData();
-
     return MaterialApp(
-      initialRoute: '/signIn',
+      initialRoute: '/signUp',
       routes: {
         '/': (context) => const Home(),
         '/addChallenge': (context) => const AddChallenge(),
         '/signUp': (context) => SignUp(),
         '/signIn': (context) => SignIn(),
+        '/verify': (context) => Verify(),
       },
       theme: ThemeData(
         // Define the default brightness and colors.

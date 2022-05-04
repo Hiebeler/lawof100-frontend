@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
@@ -17,6 +20,28 @@ class _SignUpState extends State<SignUp> {
 
   bool _isHidden = true;
   bool _isHiddenrepetition = true;
+  String email = "";
+  String username = "";
+  String password1 = "";
+  String password2 = "";
+
+  Future<int> registerUser() async {
+    var response = await http.post(
+        Uri.parse("http://192.168.1.20:3000/registration/register"),
+        body: {
+          "email": email,
+          "username": username,
+          "password1": password1,
+          "password2": password2
+        },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        });
+
+    String source = utf8.decode(response.bodyBytes);
+    var responseData = json.decode(source);
+    return responseData["status"];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +61,9 @@ class _SignUpState extends State<SignUp> {
                 height: 40,
               ),
               TextField(
+                onChanged: (text) {
+                  email = text;
+                },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
                   filled: true,
@@ -54,6 +82,9 @@ class _SignUpState extends State<SignUp> {
                 height: 30,
               ),
               TextField(
+                onChanged: (text) {
+                  username = text;
+                },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
                   filled: true,
@@ -72,6 +103,9 @@ class _SignUpState extends State<SignUp> {
                 height: 30,
               ),
               TextField(
+                onChanged: (text) {
+                  password1 = text;
+                },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
                   filled: true,
@@ -102,6 +136,9 @@ class _SignUpState extends State<SignUp> {
                 height: 30,
               ),
               TextField(
+                onChanged: (text) {
+                  password2 = text;
+                },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
                   filled: true,
@@ -121,7 +158,9 @@ class _SignUpState extends State<SignUp> {
                       });
                     },
                     child: Icon(
-                      _isHiddenrepetition ? Icons.visibility : Icons.visibility_off,
+                      _isHiddenrepetition
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: textColor,
                     ),
                   ),
@@ -134,7 +173,11 @@ class _SignUpState extends State<SignUp> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => registerUser().then((value) {
+                    if (value == 1) {
+                      Navigator.pushNamed(context, "/verify");
+                    }
+                  }),
                   child: const Text("Register"),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
