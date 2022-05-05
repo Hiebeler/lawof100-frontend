@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lawof100/components/error_dialog.dart';
 
 class Verify extends StatefulWidget {
   const Verify({Key? key}) : super(key: key);
@@ -25,6 +26,9 @@ class _VerifyState extends State<Verify> {
 
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
+    if (!responseData["verified"]) {
+      ErrorDialog("Ooops", "wrong verification Code").showAlertDialog(context);
+    }
     return responseData["verified"];
   }
 
@@ -32,7 +36,7 @@ class _VerifyState extends State<Verify> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 70, 20, 20),
+        padding: const EdgeInsets.fromLTRB(20, 70, 20, 20),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -64,7 +68,7 @@ class _VerifyState extends State<Verify> {
                   hintText: "Code",
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Align(

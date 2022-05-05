@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lawof100/feed.dart';
-import 'package:lawof100/profile.dart';
-import 'package:lawof100/publicChallenges.dart';
-import 'package:lawof100/timeline.dart';
+import 'package:lawof100/pages/feed.dart';
+import 'package:lawof100/pages/profile.dart';
+import 'package:lawof100/pages/publicChallenges.dart';
+import 'package:lawof100/pages/timeline.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

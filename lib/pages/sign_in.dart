@@ -1,16 +1,18 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lawof100/components/error_dialog.dart';
 
-class SignUp extends StatefulWidget {
-  SignUp({Key? key}) : super(key: key);
+
+class SignIn extends StatefulWidget {
+  SignIn({Key? key}) : super(key: key);
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignInState extends State<SignIn> {
   Color inputBackgroundColor = const Color.fromRGBO(36, 36, 36, 1.0);
 
   Color textColor = const Color.fromRGBO(234, 234, 234, 1.0);
@@ -18,21 +20,18 @@ class _SignUpState extends State<SignUp> {
   TextStyle hintTextStyle =
       const TextStyle(color: Color.fromRGBO(117, 117, 117, 1.0), fontSize: 15);
 
-  bool _isHidden = true;
-  bool _isHiddenrepetition = true;
-  String email = "";
-  String username = "";
-  String password1 = "";
-  String password2 = "";
+  final _storage = const FlutterSecureStorage();
 
-  Future<int> registerUser() async {
+  bool _isHidden = true;
+  String email = "";
+  String password = "";
+
+  Future<bool> login() async {
     var response = await http.post(
-        Uri.parse("http://192.168.1.20:3000/registration/register"),
+        Uri.parse("http://192.168.1.20:3000/registration/login"),
         body: {
           "email": email,
-          "username": username,
-          "password1": password1,
-          "password2": password2
+          "password": password,
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
@@ -40,7 +39,14 @@ class _SignUpState extends State<SignUp> {
 
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
-    return responseData["status"];
+    if (responseData["token"] != null) {
+      await _storage.delete(key: 'jwt');
+      await _storage.write(key: 'jwt', value: responseData["token"]);
+      return true;
+    } else {
+      ErrorDialog("Ooops", responseData["message"]).showAlertDialog(context);
+      return false;
+    }
   }
 
   @override
@@ -51,11 +57,9 @@ class _SignUpState extends State<SignUp> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Center(
-                child: Text(
-                  "Sign Up",
-                  style: Theme.of(context).textTheme.headline1,
-                ),
+              Text(
+                "Login",
+                style: Theme.of(context).textTheme.headline1,
               ),
               const SizedBox(
                 height: 40,
@@ -83,28 +87,7 @@ class _SignUpState extends State<SignUp> {
               ),
               TextField(
                 onChanged: (text) {
-                  username = text;
-                },
-                style: hintTextStyle.copyWith(color: textColor),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: inputBackgroundColor,
-                  border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      )),
-                  hintStyle: hintTextStyle,
-                  hintText: "Username",
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              TextField(
-                onChanged: (text) {
-                  password1 = text;
+                  password = text;
                 },
                 style: hintTextStyle.copyWith(color: textColor),
                 decoration: InputDecoration(
@@ -133,52 +116,17 @@ class _SignUpState extends State<SignUp> {
                 obscureText: _isHidden,
               ),
               const SizedBox(
-                height: 30,
-              ),
-              TextField(
-                onChanged: (text) {
-                  password2 = text;
-                },
-                style: hintTextStyle.copyWith(color: textColor),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: inputBackgroundColor,
-                  border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      )),
-                  hintStyle: hintTextStyle,
-                  hintText: "Repeat your password",
-                  suffixIcon: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isHiddenrepetition = !_isHiddenrepetition;
-                      });
-                    },
-                    child: Icon(
-                      _isHiddenrepetition
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: textColor,
-                    ),
-                  ),
-                ),
-                obscureText: _isHiddenrepetition,
-              ),
-              const SizedBox(
                 height: 20,
               ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton(
-                  onPressed: () => registerUser().then((value) {
-                    if (value == 1) {
-                      Navigator.pushNamed(context, "/verify");
+                  onPressed: () => login().then((value) {
+                    if (value) {
+                      Navigator.pushNamed(context, "/home");
                     }
                   }),
-                  child: const Text("Register"),
+                  child: const Text("Sign in"),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).primaryColor),
@@ -188,8 +136,8 @@ class _SignUpState extends State<SignUp> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, "/signIn"),
-                  child: const Text("login"),
+                  onPressed: () => Navigator.pushNamed(context, "/signUp"),
+                  child: const Text("register"),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).backgroundColor),

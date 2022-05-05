@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:lawof100/add_challenge.dart';
-import 'package:lawof100/home.dart';
-import 'package:lawof100/sign_in.dart';
-import 'package:lawof100/sign_up.dart';
-import 'package:lawof100/verify.dart';
+import 'package:lawof100/pages/add_challenge.dart';
+import 'package:lawof100/pages/home.dart';
+import 'package:lawof100/pages/sign_in.dart';
+import 'package:lawof100/pages/sign_up.dart';
+import 'package:lawof100/pages/verify.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +69,8 @@ class _MainState extends State<Main> {
               headline6: TextStyle(
                 fontSize: 23.0,
               ),
-              bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              bodyText1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              bodyText2: TextStyle(fontSize: 15.0, fontFamily: 'Hind', color: Color.fromRGBO(117, 117, 117, 1.0)),
             ),
           ),
         );

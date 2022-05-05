@@ -31,7 +31,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   Future<Map> getUser() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://10.110.48.135:3000/user/getuser"),
+        Uri.parse("http://192.168.1.20:3000/user/getuser"),
         headers: {"x-auth-token": token.toString()});
 
     String source = utf8.decode(response.bodyBytes);
