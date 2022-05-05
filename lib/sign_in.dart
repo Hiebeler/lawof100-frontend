@@ -27,7 +27,7 @@ class _SignInState extends State<SignIn> {
 
   Future<bool> login() async {
     var response = await http.post(
-        Uri.parse("http://192.168.1.20:3000/registration/login"),
+        Uri.parse("http://10.110.48.135:3000/registration/login"),
         body: {
           "email": email,
           "password": password,
@@ -39,7 +39,6 @@ class _SignInState extends State<SignIn> {
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
     if (responseData["token"] != null) {
-      print(responseData["token"]);
       await _storage.write(key: 'jwt', value: responseData["token"]);
       return true;
     } else {

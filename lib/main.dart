@@ -26,7 +26,11 @@ class _MainState extends State<Main> {
 
   Future<String?> getJWT() async {
     const storage = FlutterSecureStorage();
-    return await storage.read(key: "jwt");
+    String? token = await storage.read(key: "jwt");
+    if (token == null) {
+      return "";
+    }
+    return token;
   }
 
   @override
