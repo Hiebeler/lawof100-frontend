@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+
+import '../components/error_dialog.dart';
 
 class AddChallenge extends StatefulWidget {
   const AddChallenge({Key? key}) : super(key: key);
@@ -12,9 +17,11 @@ class AddChallenge extends StatefulWidget {
 }
 
 class _AddChallengeState extends State<AddChallenge> {
+  String name = "";
   bool isPublic = true;
   DateTime selectedDate = DateTime.now();
   File? image;
+  static const storage = FlutterSecureStorage();
 
   void getImage() async {
     try {
@@ -53,6 +60,29 @@ class _AddChallengeState extends State<AddChallenge> {
     }
   }
 
+  Future<bool> saveToDb() async {
+    String? token = await storage.read(key: "jwt");
+    var private = !isPublic;
+    var response = await http.post(
+        Uri.parse("http://192.168.1.20:3000/challenge/createChallenge"),
+        body: {
+          "name": name,
+          "private": private.toString(),
+          "startDate": selectedDate.toString()
+        },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "x-auth-token": token.toString(),
+        });
+    String source = utf8.decode(response.bodyBytes);
+    var responseData = json.decode(source);
+    if (responseData["status"] == 1) {
+      return true;
+    }
+    ErrorDialog("Ooops", responseData["message"]).showAlertDialog(context);
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,10 +105,13 @@ class _AddChallengeState extends State<AddChallenge> {
               ),
               onTap: getImage,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
+              onChanged: (text) {
+                name = text;
+              },
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
@@ -125,7 +158,9 @@ class _AddChallengeState extends State<AddChallenge> {
                 child: Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => saveToDb().then((value) => {
+                      if (value) {Navigator.pop(context)}
+                    }),
                 child: const Text("Save"),
                 style: ButtonStyle(
                   backgroundColor:
