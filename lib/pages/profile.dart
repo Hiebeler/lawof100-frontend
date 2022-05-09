@@ -39,6 +39,18 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     return responseData;
   }
 
+  Future getAllCreatedChallenges(request) async {
+    String? token = await storage.read(key: "jwt");
+    var response = await http.get(
+        Uri.parse("http://192.168.1.20:3000/challenge/" + request),
+        headers: {
+          "x-auth-token": token.toString(),
+        });
+    String source = utf8.decode(response.bodyBytes);
+    var responseData = json.decode(source);
+    return responseData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -80,24 +92,15 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                       children: [
                         SingleChildScrollView(
                           child: Column(
-                            children: const [
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
+                            children: [
+                              ChallengesList("getAllAttendedChallenges")
                             ],
                           ),
                         ),
                         SingleChildScrollView(
                           child: Column(
-                            children: const [
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
-                              PublicChallengesComponent(),
+                            children: [
+                              ChallengesList("getAllCreatedChallenges")
                             ],
                           ),
                         ),
@@ -112,5 +115,25 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             return Container();
           }
         });
+  }
+
+  Widget ChallengesList(String request) {
+    return FutureBuilder(
+      future: getAllCreatedChallenges(request),
+      builder: (builder, snapshot) {
+        if (snapshot.hasData) {
+          List data = snapshot.data as List;
+          return Column(children: [
+            ...(data).map((challenge) {
+              return PublicChallengesComponent(
+                name: challenge["name"],
+                startDate: challenge["startdate"],
+              );
+            })
+          ]);
+        }
+        return Container();
+      },
+    );
   }
 }

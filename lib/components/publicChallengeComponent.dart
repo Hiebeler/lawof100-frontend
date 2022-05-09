@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PublicChallengesComponent extends StatelessWidget {
-  const PublicChallengesComponent({Key? key}) : super(key: key);
+  final name;
+  final startDate;
+  const PublicChallengesComponent({required this.name, required this.startDate});
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +22,12 @@ class PublicChallengesComponent extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("challenge 1", style: Theme.of(context).textTheme.headline3,),
+                  Text(name, style: Theme.of(context).textTheme.headline3,),
                   Row(
                     children: [
                       Text("start Date: ", style: Theme.of(context).textTheme.bodyText2,),
                       const SizedBox(height: 20,),
-                      Text("01.05.2022", style: Theme.of(context).textTheme.bodyText2,)
+                      Text(startDate.toString().substring(0,10), style: Theme.of(context).textTheme.bodyText2,)
                     ],
                   )
                 ],
