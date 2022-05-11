@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:lawof100/components/error_dialog.dart';
 
@@ -22,7 +23,7 @@ class _VerifyState extends State<Verify> {
 
   Future<bool> verifyUser() async {
     var response = await http
-        .get(Uri.parse("http://192.168.1.20:3000/registration/verify/" + code));
+        .get(Uri.parse("http://" + dotenv.get("HOST") + ":" +  dotenv.get("PORT") + "/registration/verify/" + code));
 
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);

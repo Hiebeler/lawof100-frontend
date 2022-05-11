@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:lawof100/components/publicChallengeComponent.dart';
@@ -31,7 +32,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   Future<Map> getUser() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://192.168.1.20:3000/user/getuser"),
+        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/user/getuser"),
         headers: {"x-auth-token": token.toString()});
 
     String source = utf8.decode(response.bodyBytes);
@@ -42,7 +43,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   Future getAllCreatedChallenges(request) async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://192.168.1.20:3000/challenge/" + request),
+        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/challenge/" + request),
         headers: {
           "x-auth-token": token.toString(),
         });

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lawof100/components/error_dialog.dart';
@@ -28,7 +29,7 @@ class _SignInState extends State<SignIn> {
 
   Future<bool> login() async {
     var response = await http.post(
-        Uri.parse("http://192.168.1.20:3000/registration/login"),
+        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/registration/login"),
         body: {
           "email": email,
           "password": password,

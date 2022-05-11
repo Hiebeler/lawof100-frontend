@@ -6,13 +6,15 @@ import 'package:lawof100/pages/home.dart';
 import 'package:lawof100/pages/sign_in.dart';
 import 'package:lawof100/pages/sign_up.dart';
 import 'package:lawof100/pages/verify.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(Main());
+    runApp(const Main());
   });
 }
 
