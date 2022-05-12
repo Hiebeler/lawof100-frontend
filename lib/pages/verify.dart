@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:lawof100/components/error_dialog.dart';
+import 'package:lawof100/components/dialog.dart';
 
 class Verify extends StatefulWidget {
   const Verify({Key? key}) : super(key: key);
@@ -28,7 +28,8 @@ class _VerifyState extends State<Verify> {
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
     if (!responseData["verified"]) {
-      ErrorDialog("Ooops", "wrong verification Code").showAlertDialog(context);
+
+      CustomDialog("Ooops", "wrong verification Code").showAlertDialog(context);
     }
     return responseData["verified"];
   }

@@ -21,7 +21,28 @@ class _FeedState extends State<Feed> {
   Future getChallengeData() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/challenge/getAllChallenges"),
+        Uri.parse("http://" +
+            dotenv.get("HOST") +
+            ":" +
+            dotenv.get("PORT") +
+            "/challenge/getAllAttendedChallenges"),
+        headers: {
+          "x-auth-token": token.toString(),
+        });
+    String source = utf8.decode(response.bodyBytes);
+    var responseData = json.decode(source);
+    return responseData;
+  }
+
+  Future getEntries(int challengeId) async {
+    String? token = await storage.read(key: "jwt");
+    var response = await http.get(
+        Uri.parse("http://" +
+            dotenv.get("HOST") +
+            ":" +
+            dotenv.get("PORT") +
+            "/challenge/getEntriesOfChallenge/" +
+            challengeId.toString()),
         headers: {
           "x-auth-token": token.toString(),
         });
@@ -32,66 +53,104 @@ class _FeedState extends State<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 60),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: ElevatedButton(
-                  onPressed: () =>
-                      {Navigator.pushNamed(context, "/addChallenge")},
-                  child: const Text("add Challenge"),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColor),
+    return FutureBuilder(
+        future: getChallengeData(),
+        builder: (builder, snapshot) {
+          if (snapshot.hasData) {
+            List challengeData = snapshot.data as List;
+            return DefaultTabController(
+              length: challengeData.length,
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Center(
+                    child: PreferredSize(
+                        child: TabBar(
+                            indicatorColor: Theme.of(context).primaryColor,
+                            labelColor: Colors.white,
+                            isScrollable: true,
+                            unselectedLabelColor: Colors.white.withOpacity(0.3),
+                            tabs: [
+                              ...(challengeData).map((challenge) {
+                                return Tab(
+                                  child: Text(challenge["name"]),
+                                );
+                              })
+                            ]),
+                        preferredSize: Size.fromHeight(30.0)),
                   ),
                 ),
-              ),
-              //Grids
-              FutureBuilder(
-                future: getChallengeData(),
-                builder: (builder, snapshot) {
-                  if (snapshot.hasData) {
-                    print(snapshot.data);
-                    List data = snapshot.data as List;
-                    return Column(
+                body: Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: TabBarView(
                       children: [
-                        ...(data).map((challenge) {
-                          return Column(
-                            children: [
-                              Center(
-                                child: Text(
-                                  challenge["name"],
-                                  style: Theme.of(context).textTheme.headline1,
-                                ),
+                        ...(challengeData).map((challenge) {
+                          return SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: ElevatedButton(
+                                      onPressed: () => {
+                                        Navigator.pushNamed(
+                                            context, "/addChallenge")
+                                      },
+                                      child: const Text("add Challenge"),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                    ),
+                                  ),
+                                  //Grids
+                                  FutureBuilder(
+                                      future: getEntries(
+                                          challenge["fk_challenge_id"]),
+                                      builder: (builder, snapshot) {
+                                        if (snapshot.hasData) {
+                                          List entries = snapshot.data as List;
+                                          return Column(
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  challenge["name"],
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline1,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 20),
+                                                child:
+                                                    Grid(entriesList: entries, startDateString: challenge["startdate"], challengeId: challenge["fk_challenge_id"]),
+                                              ),
+                                              //Logs:
+                                              ...(entries).map((e) {
+                                                return Log(
+                                                    text: e["description"],
+                                                    day: e["day"].toString(),
+                                                    done: e["successful"]);
+                                              })
+                                            ],
+                                          );
+                                        }
+                                        return const CircularProgressIndicator();
+                                      }),
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Grid(gridList: const [1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,1,]),
-                              ),
-
-                              //Logs:
-                              Log(text: "hallo", day: "2", done: true),
-                              Log(text: "asdfasdf", day: "2", done: false),
-                              Log(text: "hallo", day: "23", done: true),
-                              Log(text: "hallo", day: "2", done: true),
-                            ],
+                            ),
                           );
-                        })
+                        }),
                       ],
-                    );
-                  }
-                  return Container();
-                },
+                    )),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ErrorDialog {
+class CustomDialog {
   String title;
   String content;
 
-  ErrorDialog(this.title, this.content, {Key? key});
+  CustomDialog(this.title, this.content, {Key? key});
 
   showAlertDialog(BuildContext context) {
     Widget okButton = ElevatedButton(

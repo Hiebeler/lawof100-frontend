@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:lawof100/components/error_dialog.dart';
+import 'package:lawof100/components/dialog.dart';
 
 
 class SignIn extends StatefulWidget {
@@ -45,7 +45,7 @@ class _SignInState extends State<SignIn> {
       await _storage.write(key: 'jwt', value: responseData["token"]);
       return true;
     } else {
-      ErrorDialog("Ooops", responseData["message"]).showAlertDialog(context);
+      CustomDialog("Ooops", responseData["message"]).showAlertDialog(context);
       return false;
     }
   }

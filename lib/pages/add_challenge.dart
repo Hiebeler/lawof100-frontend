@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-
-import '../components/error_dialog.dart';
+import '../components/dialog.dart';
 
 class AddChallenge extends StatefulWidget {
   const AddChallenge({Key? key}) : super(key: key);
@@ -64,7 +63,11 @@ class _AddChallengeState extends State<AddChallenge> {
     String? token = await storage.read(key: "jwt");
     var private = !isPublic;
     var response = await http.post(
-        Uri.parse("http://192.168.1.20:3000/challenge/createChallenge"),
+        Uri.parse("http://" +
+            dotenv.get("HOST") +
+            ":" +
+            dotenv.get("PORT") +
+            "/challenge/createChallenge"),
         body: {
           "name": name,
           "private": private.toString(),
@@ -79,7 +82,7 @@ class _AddChallengeState extends State<AddChallenge> {
     if (responseData["status"] == 1) {
       return true;
     }
-    ErrorDialog("Ooops", responseData["message"]).showAlertDialog(context);
+    CustomDialog("Ooops", responseData["message"]).showAlertDialog(context);
     return false;
   }
 

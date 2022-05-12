@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:lawof100/components/error_dialog.dart';
+import 'package:lawof100/components/dialog.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
@@ -41,10 +41,8 @@ class _SignUpState extends State<SignUp> {
 
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
-    print(responseData);
     if (responseData["header"] == "Error") {
-      print("alert");
-      ErrorDialog("Ooops", responseData["message"]).showAlertDialog(context);
+      CustomDialog("Ooops", responseData["message"]).showAlertDialog(context);
     }
     return responseData["status"];
   }
