@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:lawof100/components/grid_and_logs.dart';
 
-import '../components/grid.dart';
-import '../components/log.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key? key}) : super(key: key);
@@ -34,29 +33,12 @@ class _FeedState extends State<Feed> {
     return responseData;
   }
 
-  Future getEntries(int challengeId) async {
-    String? token = await storage.read(key: "jwt");
-    var response = await http.get(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
-            "/challenge/getEntriesOfChallenge/" +
-            challengeId.toString()),
-        headers: {
-          "x-auth-token": token.toString(),
-        });
-    String source = utf8.decode(response.bodyBytes);
-    var responseData = json.decode(source);
-    return responseData;
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: getChallengeData(),
         builder: (builder, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.done) {
             List challengeData = snapshot.data as List;
             return DefaultTabController(
               length: challengeData.length,
@@ -92,9 +74,9 @@ class _FeedState extends State<Feed> {
                                   Align(
                                     alignment: Alignment.topRight,
                                     child: ElevatedButton(
-                                      onPressed: () => {
+                                      onPressed: () {
                                         Navigator.pushNamed(
-                                            context, "/addChallenge")
+                                           context, "/addChallenge");
                                       },
                                       child: const Text("add Challenge"),
                                       style: ButtonStyle(
@@ -104,41 +86,7 @@ class _FeedState extends State<Feed> {
                                       ),
                                     ),
                                   ),
-                                  //Grids
-                                  FutureBuilder(
-                                      future: getEntries(
-                                          challenge["fk_challenge_id"]),
-                                      builder: (builder, snapshot) {
-                                        if (snapshot.hasData) {
-                                          List entries = snapshot.data as List;
-                                          return Column(
-                                            children: [
-                                              Center(
-                                                child: Text(
-                                                  challenge["name"],
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline1,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 20),
-                                                child:
-                                                    Grid(entriesList: entries, startDateString: challenge["startdate"], challengeId: challenge["fk_challenge_id"]),
-                                              ),
-                                              //Logs:
-                                              ...(entries).map((e) {
-                                                return Log(
-                                                    text: e["description"],
-                                                    day: e["day"].toString(),
-                                                    done: e["successful"]);
-                                              })
-                                            ],
-                                          );
-                                        }
-                                        return const CircularProgressIndicator();
-                                      }),
+                                  GridAndLogs(challenge: challenge),
                                 ],
                               ),
                             ),

@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 
 class AddEntryDialog extends StatefulWidget {
   final int day;
   final int challengeId;
-  const AddEntryDialog({required this.day, required this.challengeId});
+  final Function reload;
+
+  const AddEntryDialog(
+      {required this.day, required this.challengeId, required this.reload});
 
   @override
   State<AddEntryDialog> createState() => _AddEntryDialogState();
@@ -88,15 +92,16 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: () => {addEntry().then((value) {
-              setState(() {
+            onPressed: () => {
+              addEntry().then((value) {
+                widget.reload();
                 Navigator.pop(context);
-              });
-            })},
+              })
+            },
             child: const Text("add"),
             style: ButtonStyle(
               backgroundColor:
-              MaterialStateProperty.all(Theme.of(context).primaryColor),
+                  MaterialStateProperty.all(Theme.of(context).primaryColor),
             ),
           ),
         ],
