@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LogTimeline extends StatelessWidget {
-  const LogTimeline({Key? key}) : super(key: key);
+  Map entry;
+  LogTimeline({required this.entry});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +21,16 @@ class LogTimeline extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("bla bla bla", style: Theme.of(context).textTheme.headline3,),
+                  Text(entry["description"], style: Theme.of(context).textTheme.headline3,),
                   Row(
                     children: [
-                      Text("@hiebeler05", style: Theme.of(context).textTheme.bodyText2,),
+                      Text(entry["username"].toString(), style: Theme.of(context).textTheme.bodyText2,),
                       const Text(" | "),
-                      const Text("Day 1")
+                      Text("Day " + entry["day"].toString())
                     ],
                   ),
                   const SizedBox(height: 5,),
-                  const Text("challenge 1")
+                  Text(entry["challenge_name"])
                 ],
               )
             ],
