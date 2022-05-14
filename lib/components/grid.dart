@@ -58,22 +58,28 @@ class _GridState extends State<Grid> {
         children: [
           ...gridList.map((e) {
             int day = e["day"];
+            DateTime datePlusDaysPlus2 = DateTime(
+                startDate.year, startDate.month, startDate.day + day + 2);
+            DateTime datePlusDaysPlus1 = DateTime(
+                startDate.year, startDate.month, startDate.day + day + 1);
             DateTime datePlusDays =
                 DateTime(startDate.year, startDate.month, startDate.day + day);
-            DateTime datePlusDaysPlus1 = DateTime(
-                startDate.year, startDate.month, startDate.day + day - 1);
             return GestureDetector(
               onTap: () {
                 if (e["successful"] == 1 || e["successful"] == 0) {
                   CustomDialog("Day " + e["day"].toString(), e["description"])
                       .showAlertDialog(context);
-                } else if (datePlusDaysPlus1.isBefore(DateTime.now()) &&
-                    datePlusDays.isAfter(DateTime.now())) {
+                } else if (datePlusDays.isBefore(DateTime.now()) &&
+                    datePlusDaysPlus2.isAfter(DateTime.now())) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AddEntryDialog(
-                          day: day, challengeId: widget.challengeId, reload: () {widget.reload();});
+                          day: day,
+                          challengeId: widget.challengeId,
+                          reload: () {
+                            widget.reload();
+                          });
                     },
                   );
                 }
@@ -90,9 +96,9 @@ class _GridState extends State<Grid> {
                         : const Color.fromRGBO(40, 45, 54, 1.0),
                   ),
                 ),
-                child: datePlusDaysPlus1.isBefore(DateTime.now()) &&
-                        datePlusDays.isAfter(DateTime.now())
-                    ? Icon(Icons.close)
+                child: datePlusDays.isBefore(DateTime.now()) &&
+                        datePlusDaysPlus1.isAfter(DateTime.now())
+                    ? const Icon(Icons.close)
                     : Container(),
               ),
             );

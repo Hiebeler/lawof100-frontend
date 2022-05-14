@@ -46,7 +46,7 @@ class LogTimeline extends StatelessWidget {
                                     entry["day"].toString(),
                                 style: Theme.of(context).textTheme.bodyText2,
                               ),
-                              const Text("joined Users: 2011")
+                              Text(entry["challenge_name"])
                             ],
                           ),
                         ),
@@ -55,7 +55,7 @@ class LogTimeline extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: !done
-                          ? Icon(Icons.close, color: Colors.red)
+                          ? const Icon(Icons.close, color: Colors.red)
                           : Icon(Icons.check, color: Theme.of(context).primaryColor,),
                     ),
                   ],
