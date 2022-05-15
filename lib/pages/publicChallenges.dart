@@ -81,7 +81,7 @@ class _PublicChallengesState extends State<PublicChallenges> {
                           child: PublicChallengesComponent.withoutJoinChallenge(
                               name: challenge["name"],
                               startDate: challenge["startdate"],
-                              joined: challenge["joined"] == 0 ? false : true,
+                              joined: challenge["fk_user_id"] == null ? false : true,
                               joinChallenge: () =>
                                   joinChallenge(challenge["id"])?.then((value) {
                                     setState(() {});
