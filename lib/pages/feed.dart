@@ -24,7 +24,7 @@ class _FeedState extends State<Feed> {
             dotenv.get("HOST") +
             ":" +
             dotenv.get("PORT") +
-            "/challenge/getAllAttendedChallenges"),
+            "/challenge/getAllAttendingChallenges"),
         headers: {
           "x-auth-token": token.toString(),
         });

@@ -32,7 +32,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   Future<Map> getUser() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/user/getuser"),
+        Uri.parse("http://" +
+            dotenv.get("HOST") +
+            ":" +
+            dotenv.get("PORT") +
+            "/user/getuser"),
         headers: {"x-auth-token": token.toString()});
 
     String source = utf8.decode(response.bodyBytes);
@@ -40,13 +44,17 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     return responseData;
   }
 
-  Future getAllCreatedChallenges(request) async {
+  Future getAllChallenges(getFinished) async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/challenge/" + request),
+        Uri.parse("http://" +
+            dotenv.get("HOST") +
+            ":" +
+            dotenv.get("PORT") +
+            "/challenge/getAllChallengesFinishedOrInProgress/" + getFinished.toString()),
         headers: {
           "x-auth-token": token.toString(),
-        });
+        },);
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
     return responseData;
@@ -85,7 +93,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   TabBar(
                     indicatorColor: Theme.of(context).primaryColor,
                     labelColor: Colors.white,
-                    tabs: const [Tab(text: "Attended"), Tab(text: 'Created')],
+                    tabs: const [
+                      Tab(text: "in Progress"),
+                      Tab(text: 'Finished')
+                    ],
                     controller: _tabController,
                   ),
                   Expanded(
@@ -94,14 +105,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                         SingleChildScrollView(
                           child: Column(
                             children: [
-                              ChallengesList("getAllAttendedChallenges")
+                              ChallengesList(false)
                             ],
                           ),
                         ),
                         SingleChildScrollView(
                           child: Column(
                             children: [
-                              ChallengesList("getAllCreatedChallenges")
+                              ChallengesList(true)
                             ],
                           ),
                         ),
@@ -118,9 +129,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         });
   }
 
-  Widget ChallengesList(String request) {
+  Widget ChallengesList(bool isFinished) {
     return FutureBuilder(
-      future: getAllCreatedChallenges(request),
+      future: getAllChallenges(isFinished),
       builder: (builder, snapshot) {
         if (snapshot.hasData) {
           List data = snapshot.data as List;
@@ -129,6 +140,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
               return PublicChallengesComponent(
                 name: challenge["name"],
                 startDate: challenge["startdate"],
+                challenge: challenge,
+                isFinished: isFinished,
               );
             })
           ]);

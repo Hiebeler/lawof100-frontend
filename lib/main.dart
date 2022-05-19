@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lawof100/components/grid_and_logs.dart';
 import 'package:lawof100/pages/add_challenge.dart';
 import 'package:lawof100/pages/home.dart';
 import 'package:lawof100/pages/sign_in.dart';
@@ -48,7 +49,7 @@ class _MainState extends State<Main> {
             '/addChallenge': (context) => const AddChallenge(),
             '/signUp': (context) => SignUp(),
             '/signIn': (context) => SignIn(),
-            '/verify': (context) => const Verify(),
+            '/verify': (context) => const Verify()
           },
           theme: ThemeData(
             // Define the default brightness and colors.

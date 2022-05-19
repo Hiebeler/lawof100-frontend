@@ -78,7 +78,7 @@ class _PublicChallengesState extends State<PublicChallenges> {
                     ...(data).map((challenge) {
                       return Align(
                           alignment: Alignment.centerLeft,
-                          child: PublicChallengesComponent.withoutJoinChallenge(
+                          child: PublicChallengesComponent.withJoinChallenge(
                               name: challenge["name"],
                               startDate: challenge["startdate"],
                               joined: challenge["fk_user_id"] == null ? false : true,

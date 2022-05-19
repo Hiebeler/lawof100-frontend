@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:lawof100/components/grid_and_logs.dart';
 
 class PublicChallengesComponent extends StatelessWidget {
   final name;
   final startDate;
   bool joined = true;
-
+  bool withJoined = false;
   Function? joinChallenge;
+  bool isFinished = false;
+  Map? challenge;
 
-  PublicChallengesComponent.withoutJoinChallenge(
+  PublicChallengesComponent.withJoinChallenge(
       {Key? key,
       required this.name,
       required this.startDate,
       required this.joined,
-      required this.joinChallenge})
-      : super(key: key);
+      required this.joinChallenge}) {
+    withJoined = true;
+  }
 
   PublicChallengesComponent(
-      {Key? key, required this.name, required this.startDate})
+      {Key? key,
+      required this.name,
+      required this.startDate,
+      required this.isFinished,
+      required this.challenge})
       : super(key: key);
 
   @override
@@ -75,17 +83,28 @@ class PublicChallengesComponent extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: !joined
-                          ? GestureDetector(
-                              onTap: () {
-                                joinChallenge!();
-                              },
-                              child: const Icon(Icons.add),
-                            )
-                          : const Icon(Icons.check),
-                    ),
+                    withJoined == true
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: !joined
+                                ? GestureDetector(
+                                    onTap: () {
+                                      joinChallenge!();
+                                    },
+                                    child: const Icon(Icons.add),
+                                  )
+                                : const Icon(Icons.check),
+                          )
+                        : isFinished == true
+                            ? ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => GridAndLogs(
+                                              challenge: challenge!)));
+                                },
+                                child: const Text("show Challenge"))
+                            : Container(),
                   ],
                 ),
               ),

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+
 import '../components/dialog.dart';
 
 class AddChallenge extends StatefulWidget {
@@ -115,13 +117,14 @@ class _AddChallengeState extends State<AddChallenge> {
               onChanged: (text) {
                 name = text;
               },
+              maxLength: 25,
               decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor)),
-                hintText: "Challenge Name",
-              ),
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor)),
+                  hintText: "Challenge Name",
+                  counterText: ''),
             ),
             const SizedBox(
               height: 20,
@@ -161,9 +164,12 @@ class _AddChallengeState extends State<AddChallenge> {
                 child: Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
-                onPressed: () => saveToDb().then((value) => {
-                      if (value) {Navigator.pop(context)}
-                    }),
+                onPressed: () => saveToDb().then((value) {
+                  if (value) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/home', (Route<dynamic> route) => false);
+                  }
+                }),
                 child: const Text("Save"),
                 style: ButtonStyle(
                   backgroundColor:
