@@ -45,7 +45,12 @@ class _SignInState extends State<SignIn> {
       await _storage.write(key: 'jwt', value: responseData["token"]);
       return true;
     } else {
-      CustomDialog("Ooops", responseData["message"]).showAlertDialog(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomDialog("Ooops", responseData["message"]);
+          }
+      );
       return false;
     }
   }

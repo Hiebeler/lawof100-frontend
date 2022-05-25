@@ -42,7 +42,12 @@ class _SignUpState extends State<SignUp> {
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
     if (responseData["header"] == "Error") {
-      CustomDialog("Ooops", responseData["message"]).showAlertDialog(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomDialog("Ooops", responseData["message"]);
+          }
+      );
     }
     return responseData["status"];
   }

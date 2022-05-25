@@ -22,6 +22,7 @@ class _AddChallengeState extends State<AddChallenge> {
   bool isPublic = true;
   DateTime selectedDate = DateTime.now();
   File? image;
+  String description = "";
   static const storage = FlutterSecureStorage();
 
   void getImage() async {
@@ -73,7 +74,8 @@ class _AddChallengeState extends State<AddChallenge> {
         body: {
           "name": name,
           "private": private.toString(),
-          "startDate": selectedDate.toString()
+          "startDate": selectedDate.toString(),
+          "description": description
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -84,7 +86,12 @@ class _AddChallengeState extends State<AddChallenge> {
     if (responseData["status"] == 1) {
       return true;
     }
-    CustomDialog("Ooops", responseData["message"]).showAlertDialog(context);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialog("Ooops", responseData["message"]);
+        }
+    );
     return false;
   }
 

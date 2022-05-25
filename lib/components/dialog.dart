@@ -1,37 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:lawof100/my_globals.dart';
 
-class CustomDialog {
+import 'addEntryDialog.dart';
+
+class CustomDialog extends StatefulWidget {
   String title;
   String content;
+  bool change = false;
+  int day = 0;
+  int challengeId = 0;
+  Function reload = () => {};
 
-  CustomDialog(this.title, this.content, {Key? key});
+  CustomDialog.entry(this.title, this.content, this.change, this.day,
+      this.challengeId, this.reload,
+      {Key? key})
+      : super(key: key);
 
-  showAlertDialog(BuildContext context) {
+  CustomDialog(this.title, this.content, {Key? key}) : super(key: key);
+
+  @override
+  State<CustomDialog> createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  @override
+  Widget build(BuildContext context) {
     Widget okButton = ElevatedButton(
-        onPressed: () => {Navigator.of(context).pop()},
-        child: const Text("Ok"),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-              Theme.of(context).primaryColor),
-        ),
+      onPressed: () => {Navigator.of(context).pop()},
+      child: const Text("Ok"),
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).primaryColor),
+      ),
     );
 
-    AlertDialog alert = AlertDialog(
+    Widget changeButton = ElevatedButton(
+      onPressed: () => {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AddEntryDialog(
+                day: widget.day,
+                challengeId: widget.challengeId,
+                reload: () {
+                  widget.reload();
+                });
+          },
+        ).then((valueFromDialog) {
+          setState(() {
+            widget.content = valueFromDialog;
+          });
+        })
+      },
+      child: const Text("change"),
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).primaryColor),
+      ),
+    );
+
+    return AlertDialog(
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       backgroundColor: Theme.of(context).backgroundColor,
-      title: Text(title),
-      content: Text(content, style: Theme.of(context).textTheme.bodyText2,),
+      title: Text(widget.title),
+      content: Text(
+        widget.content,
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
       actions: [
+        widget.change ? changeButton : Container(),
         okButton,
       ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
     );
   }
 }

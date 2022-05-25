@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lawof100/components/addEntryDialog.dart';
 import 'package:lawof100/components/dialog.dart';
+import 'package:lawof100/my_globals.dart';
 
 class Grid extends StatefulWidget {
   var entriesList = [];
@@ -67,8 +68,24 @@ class _GridState extends State<Grid> {
             return GestureDetector(
               onTap: () {
                 if (e["successful"] == 1 || e["successful"] == 0) {
-                  CustomDialog("Day " + e["day"].toString(), e["description"])
-                      .showAlertDialog(context);
+                  bool change = false;
+                  if (datePlusDays.isBefore(DateTime.now()) &&
+                      datePlusDaysPlus2.isAfter(DateTime.now())) {
+                    change = true;
+                  }
+                  showDialog(
+                      context:
+                          myGlobals.scaffoldKey.currentContext as BuildContext,
+                      builder: (BuildContext context) {
+                        return CustomDialog.entry(
+                            "Day " + e["day"].toString(),
+                            e["description"],
+                            change,
+                            day,
+                            widget.challengeId, () {
+                          widget.reload();
+                        });
+                      });
                 } else if (datePlusDays.isBefore(DateTime.now()) &&
                     datePlusDaysPlus2.isAfter(DateTime.now())) {
                   showDialog(
@@ -88,13 +105,10 @@ class _GridState extends State<Grid> {
                 decoration: BoxDecoration(
                   color: e["successful"] == 1
                       ? Theme.of(context).primaryColor
-                      : const Color.fromRGBO(40, 45, 54, 1.0),
+                      : e["successful"] == 0
+                          ? const Color.fromRGBO(104, 9, 9, 1.0)
+                          : const Color.fromRGBO(40, 45, 54, 1.0),
                   borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                  border: Border.all(
-                    color: e["successful"] == 0
-                        ? Theme.of(context).primaryColor
-                        : const Color.fromRGBO(40, 45, 54, 1.0),
-                  ),
                 ),
                 child: datePlusDays.isBefore(DateTime.now()) &&
                         datePlusDaysPlus1.isAfter(DateTime.now())

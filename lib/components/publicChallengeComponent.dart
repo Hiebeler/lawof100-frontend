@@ -98,7 +98,7 @@ class PublicChallengesComponent extends StatelessWidget {
                         : isFinished == true
                             ? ElevatedButton(
                                 onPressed: () {
-                                  Navigator.of(context).pushReplacement(
+                                  Navigator.of(context).push(
                                       MaterialPageRoute(
                                           builder: (context) => GridAndLogs(
                                               challenge: challenge!)));

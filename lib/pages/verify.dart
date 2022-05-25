@@ -29,7 +29,12 @@ class _VerifyState extends State<Verify> {
     var responseData = json.decode(source);
     if (!responseData["verified"]) {
 
-      CustomDialog("Ooops", "wrong verification Code").showAlertDialog(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CustomDialog("Ooops", responseData["message"]);
+          }
+      );
     }
     return responseData["verified"];
   }

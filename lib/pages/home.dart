@@ -4,6 +4,8 @@ import 'package:lawof100/pages/profile.dart';
 import 'package:lawof100/pages/publicChallenges.dart';
 import 'package:lawof100/pages/timeline.dart';
 
+import '../my_globals.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -14,10 +16,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int navigationBarIndex = 0;
   final PageController _pageController = PageController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: myGlobals.scaffoldKey,
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: _pageController,

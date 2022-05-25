@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../my_globals.dart';
+
 class AddEntryDialog extends StatefulWidget {
   final int day;
   final int challengeId;
@@ -95,7 +97,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
             onPressed: () => {
               addEntry().then((value) {
                 widget.reload();
-                Navigator.pop(context);
+                Navigator.pop(context, description);
               })
             },
             child: const Text("add"),
