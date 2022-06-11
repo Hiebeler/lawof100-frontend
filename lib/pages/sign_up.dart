@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
 
   Future<int> registerUser() async {
     var response = await http.post(
-        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/registration/register"),
+        Uri.parse(dotenv.get("API_ADDRESS") + "/registration/register"),
         body: {
           "email": email,
           "username": username,

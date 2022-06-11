@@ -20,10 +20,7 @@ class _FeedState extends State<Feed> {
   Future getChallengeData() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/getAllAttendingChallenges"),
         headers: {
           "x-auth-token": token.toString(),
@@ -60,6 +57,7 @@ class _FeedState extends State<Feed> {
                             ]),
                         preferredSize: Size.fromHeight(30.0)),
                   ),
+                  automaticallyImplyLeading: false,
                 ),
                 body: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),

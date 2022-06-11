@@ -20,10 +20,7 @@ class _PublicChallengesState extends State<PublicChallenges> {
     print("get All Challenges");
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/getAllChallengesWithJoinedField"),
         headers: {
           "x-auth-token": token.toString(),
@@ -36,10 +33,7 @@ class _PublicChallengesState extends State<PublicChallenges> {
   Future<bool>? joinChallenge(int challengeId) async {
     String? token = await storage.read(key: "jwt");
     var response = await http.post(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/joinChallenge"),
         body: {
           "challengeId": challengeId.toString(),

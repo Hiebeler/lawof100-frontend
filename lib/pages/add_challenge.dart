@@ -66,10 +66,7 @@ class _AddChallengeState extends State<AddChallenge> {
     String? token = await storage.read(key: "jwt");
     var private = !isPublic;
     var response = await http.post(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/createChallenge"),
         body: {
           "name": name,

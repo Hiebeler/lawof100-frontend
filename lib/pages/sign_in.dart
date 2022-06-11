@@ -29,7 +29,7 @@ class _SignInState extends State<SignIn> {
 
   Future<bool> login() async {
     var response = await http.post(
-        Uri.parse("http://" + dotenv.get("HOST") +":" +  dotenv.get("PORT") + "/registration/login"),
+        Uri.parse(dotenv.get("API_ADDRESS") + "/registration/login"),
         body: {
           "email": email,
           "password": password,

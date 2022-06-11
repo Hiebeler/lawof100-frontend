@@ -29,10 +29,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
     print(widget.challengeId);
     String? token = await storage.read(key: "jwt");
     var response = await http.post(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/addEntry/"),
         body: {
           "challengeId": widget.challengeId.toString(),

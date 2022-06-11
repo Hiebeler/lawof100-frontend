@@ -32,10 +32,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   Future<Map> getUser() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/user/getuser"),
         headers: {"x-auth-token": token.toString()});
 
@@ -47,10 +44,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   Future getAllChallenges(getFinished) async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/getAllChallengesFinishedOrInProgress/" + getFinished.toString()),
         headers: {
           "x-auth-token": token.toString(),

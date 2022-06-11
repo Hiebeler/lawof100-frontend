@@ -32,13 +32,14 @@ class _GridAndLogsState extends State<GridAndLogs> {
         });
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
+    print(responseData);
     return responseData;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getEntries(widget.challenge["fk_challenge_id"]),
+        future: getEntries(widget.challenge["id"]),
         builder: (builder, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             List entries = snapshot.data as List;
@@ -55,7 +56,7 @@ class _GridAndLogsState extends State<GridAndLogs> {
                   child: Grid(
                     entriesList: entries,
                     startDateString: widget.challenge["startdate"],
-                    challengeId: widget.challenge["fk_challenge_id"],
+                    challengeId: widget.challenge["id"],
                     reload: () {
                       setState(() {});
                     },

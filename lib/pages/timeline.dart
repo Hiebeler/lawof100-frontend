@@ -19,10 +19,7 @@ class _TimelineState extends State<Timeline> {
   Future getEntries() async {
     String? token = await storage.read(key: "jwt");
     var response = await http.get(
-        Uri.parse("http://" +
-            dotenv.get("HOST") +
-            ":" +
-            dotenv.get("PORT") +
+        Uri.parse(dotenv.get("API_ADDRESS") +
             "/challenge/getAllEntries"),
         headers: {
           "x-auth-token": token.toString(),

@@ -23,7 +23,7 @@ class _VerifyState extends State<Verify> {
 
   Future<bool> verifyUser() async {
     var response = await http
-        .get(Uri.parse("http://" + dotenv.get("HOST") + ":" +  dotenv.get("PORT") + "/registration/verify/" + code));
+        .get(Uri.parse(dotenv.get("API_ADDRESS") + "/registration/verify/" + code));
 
     String source = utf8.decode(response.bodyBytes);
     var responseData = json.decode(source);
